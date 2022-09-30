@@ -108,7 +108,7 @@ class View:
         self.openAi()
 
     def openAi(self):
-        openai.api_key = "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"
+        openai.api_key = "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"
         response = openai.Completion.create(
             model="text-davinci-002",
             prompt=self.conversation,
