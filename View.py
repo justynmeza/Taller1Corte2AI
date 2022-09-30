@@ -8,6 +8,7 @@ class View:
     def __init__(self):
         self.principalWindows = tk.Tk()
         self.principalWindows.geometry("500x500")
+        self.principalWindows.attributes('-fullscreen', True)
         self.principalWindows.title("BANCO NACIONAL DE SANGRE")
         self.iconImage = tk.PhotoImage(file="./Img/favicon_Corarojofull-copy.png")
         self.principalWindows.iconphoto(False, self.iconImage)
@@ -18,6 +19,7 @@ class View:
         self.options.add_command(label="Module 1", command=self.windows1)
         self.options.add_command(label="Module 2", command=self.windows2)
         self.options.add_command(label="Module 3", command=self.chatBotWindows)
+        self.options.add_command(label="Exit", command=self.principalWindows.destroy)
         self.menuPpal.add_cascade(label="Options", menu=self.options)
 
         self.logoImage = tk.PhotoImage(file="./Img/logo_rojofull.png")
@@ -32,12 +34,27 @@ class View:
 
         self.principalWindows.mainloop()
     
+    #Area psicologica
     def windows1(self):
         self.windows_one = tk.Toplevel()
         self.windows_one.geometry("400x200")
         self.windows_one.title("Windows One")
-        self.lblNameW1 = tk.Label(self.windows_one, text="Windows 1")
-        self.lblNameW1.grid(row = 0, column = 0)
+        self.iconImage = tk.PhotoImage(file="./Img/favicon_Corarojofull-copy.png")
+        self.windows_three.iconphoto(False, self.iconImage)
+        
+        self.logoImage1 = tk.PhotoImage(file="./Img/logo_rojofull.png")
+        self.logo1 = tk.Label(self.windows_three, image=self.logoImage1)
+        self.logo1.grid(row=0, column=0)
+
+        self.lblQuestionW1 = tk.Label(self.windows_one, text= "Write your opinion about the donated blood")
+        self.lblQuestionW1.grid(row=1, column=0)
+        self.UserAnswer = tk.StringVar()
+        self.UserAnswer.set("")
+        self.txtAnswerW1 = tk.Entry(self.windows_one, textvariable=self.UserAnswer)
+        self.txtAnswerW1.grid(row=2, column=0)
+        
+
+
 
     def windows2(self):
         self.windows_two = tk.Toplevel()
@@ -56,9 +73,9 @@ class View:
         self.iconImage = tk.PhotoImage(file="./Img/favicon_Corarojofull-copy.png")
         self.windows_three.iconphoto(False, self.iconImage)
         
-        self.logoImage = tk.PhotoImage(file="./Img/logo_rojofull.png")
-        self.logo = tk.Label(self.windows_three, image=self.logoImage)
-        self.logo.grid(row=0, column=0)
+        self.logoImage1 = tk.PhotoImage(file="./Img/logo_rojofull.png")
+        self.logo1 = tk.Label(self.windows_three, image=self.logoImage1)
+        self.logo1.grid(row=0, column=0)
         
         self.lblNameW3 = tk.Label(self.windows_three, text = "Chat Bot")
         self.lblNameW3.grid(row = 0, column=1)
@@ -91,7 +108,7 @@ class View:
         self.openAi()
 
     def openAi(self):
-        openai.api_key = "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"
+        openai.api_key = "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"
         response = openai.Completion.create(
             model="text-davinci-002",
             prompt=self.conversation,
@@ -103,6 +120,6 @@ class View:
             stop=[" Me:", " AI:"]
         )
         self.answer = response.choices[0].text.strip()
-        self.conversation += self.answer
+        self.conversation += "\n" + self.answer
         self.msgList.insert(tk.END, self.answer)
 
