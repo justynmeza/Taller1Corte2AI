@@ -4,7 +4,7 @@ import nlpcloud as nlp
 class NlpCloudFunctions:
     
     def __init__(self):
-        self.token = "2d60236792da4dbb4f13a91ce677a0ee0c6f9550"
+        self.token = "f1419ff838969dc7a5fa8f48dc9506a1acdf633a"
 
     def QuestionAnswer(self, question, textContext):
         client = nlp.Client("roberta-base-squad2", self.token)
@@ -21,11 +21,11 @@ class NlpCloudFunctions:
     def SentimentAnalysis(self, userText):
         client = nlp.Client("distilbert-base-uncased-finetuned-sst-2-english", self.token)
         answer = client.sentiment(userText)
-        return answer["label"]
+        return answer
 
-    def Translation(self, userText, language):
+    def Translation(self, userText):
         client = nlp.Client("nllb-200-3-3b", self.token)
-        answer = client.translation(userText, language, 'en')
+        answer = client.translation(userText,'spa_Latn', 'eng_Latn')
         return answer["translation_text"]
 
     def LanguageDetection(self, userText):
@@ -35,11 +35,7 @@ class NlpCloudFunctions:
         return fullAnswer
 
     def windows1(self, userText):
-        language = str(self.LanguageDetection(userText=userText))
-        if (language != "en"):
-            translate = str(self.Translation(userText=userText, language=language))
-        else:
-            translate = userText
+        translate = str(self.Translation(userText=userText))
         sentiment = str(self.SentimentAnalysis(userText=translate))
 
     def windows2(self, question):
@@ -48,5 +44,5 @@ class NlpCloudFunctions:
         return "Answer:\n"+str(answer)+"\nSummary:\n"+str(summary)
 
 
-app = NlpCloudFunctions().windows2(question="What needed for donated blood?")
+app = NlpCloudFunctions().windows1(userText="Me gusta donar sangre!")
 print(app)

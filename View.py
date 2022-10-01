@@ -1,3 +1,4 @@
+from cgitb import text
 from email import message
 import tkinter as tk
 import openai
@@ -16,7 +17,7 @@ class View:
         self.menuPpal = tk.Menu(self.principalWindows)
         self.principalWindows.config(menu = self.menuPpal)
         self.options = tk.Menu(self.menuPpal)
-        self.options.add_command(label="Module 1", command=self.windows1)
+        self.options.add_command(label="Module 1", command=self.Opinion)
         self.options.add_command(label="Module 2", command=self.windows2)
         self.options.add_command(label="Module 3", command=self.chatBotWindows)
         self.options.add_command(label="Exit", command=self.principalWindows.destroy)
@@ -35,10 +36,10 @@ class View:
         self.principalWindows.mainloop()
     
     #Area psicologica
-    def windows1(self):
+    def Opinion(self):
         self.windows_one = tk.Toplevel()
         self.windows_one.geometry("400x200")
-        self.windows_one.title("Windows One")
+        self.windows_one.title("Area Psicologica")
         self.iconImage = tk.PhotoImage(file="./Img/favicon_Corarojofull-copy.png")
         self.windows_three.iconphoto(False, self.iconImage)
         
@@ -52,10 +53,14 @@ class View:
         self.UserAnswer.set("")
         self.txtAnswerW1 = tk.Entry(self.windows_one, textvariable=self.UserAnswer)
         self.txtAnswerW1.grid(row=2, column=0)
+        self.btnSubmit = tk.Button(self.windows_one, text="Submit", command="")
+
+    def sendOpinion(self):
+        pass
         
 
 
-
+    #Preguntas y respuestas
     def windows2(self):
         self.windows_two = tk.Toplevel()
         self.windows_two.geometry("400x200")
@@ -108,7 +113,7 @@ class View:
         self.openAi()
 
     def openAi(self):
-        openai.api_key = "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"
+        openai.api_key = "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"
         response = openai.Completion.create(
             model="text-davinci-002",
             prompt=self.conversation,
