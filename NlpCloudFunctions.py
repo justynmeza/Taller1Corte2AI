@@ -6,6 +6,18 @@ class NlpCloudFunctions:
     def __init__(self):
         self.token = "f1419ff838969dc7a5fa8f48dc9506a1acdf633a"
 
+    def setUserText(self, userText):
+        self.userText = userText
+
+    def getUserText(self):
+        return self.userText
+
+    def setQuestion(self, question):
+        self.question = question
+    
+    def getQuestion(self):
+        return self.question
+
     def QuestionAnswer(self, question, textContext):
         client = nlp.Client("roberta-base-squad2", self.token)
         answer = client.question(question, textContext)
@@ -21,7 +33,8 @@ class NlpCloudFunctions:
     def SentimentAnalysis(self, userText):
         client = nlp.Client("distilbert-base-uncased-finetuned-sst-2-english", self.token)
         answer = client.sentiment(userText)
-        return answer
+        fullAnswer = answer["scored_labels"]
+        return fullAnswer[0]["label"]
 
     def Translation(self, userText):
         client = nlp.Client("nllb-200-3-3b", self.token)
@@ -34,15 +47,18 @@ class NlpCloudFunctions:
         fullAnswer = str(answer["languages"])[3:5]
         return fullAnswer
 
-    def windows1(self, userText):
-        translate = str(self.Translation(userText=userText))
+    def Opinion(self):
+        translate = str(self.Translation(userText=str(self.getUserText)))
         sentiment = str(self.SentimentAnalysis(userText=translate))
+        return sentiment
 
-    def windows2(self, question):
-        answer = str(self.TextGeneration(question=question))
-        summary = str(self.QuestionAnswer(question=question, textContext=answer))
+    def Questions(self):
+        answer = str(self.TextGeneration(question=str(self.getQuestion)))
+        summary = str(self.QuestionAnswer(question=str(self.getQuestion), textContext=answer))
         return "Answer:\n"+str(answer)+"\nSummary:\n"+str(summary)
 
+    
 
-app = NlpCloudFunctions().windows1(userText="Me gusta donar sangre!")
-print(app)
+app = NlpCloudFunctions()
+app.setQuestion(question="What i need for donated blood?")
+print(app.Questions())
