@@ -20,6 +20,20 @@
             "service": "Translation_and_sentimentAnalysis-NlpCloud",
             "input": "['Donar sangre es genial']",
             "output": "['Your opinion is: Donating blood is great.\\nThis opinion is: POSITIVE']"
+        },
+        {
+            "id": 4,
+            "user": "Justyn",
+            "service": "TextGeneration_and_QuestionAnswer-NlpCloud",
+            "input": "['What is donated blood']",
+            "output": "['Answer:\\nWhat is donated blood used for?\\n\\nThere are many different ways that donated blood can be used. It can be used to help treat someone who has lost a lot of blood, it can be used in surgery, and it can be used to help treat people with certain blood disorders.\\nIn summary:\\nhelp treat someone who has lost a lot of blood']"
+        },
+        {
+            "id": 5,
+            "user": "Yuyo",
+            "service": "ChatBot-OpenAi",
+            "input": "[['Where is the donate blood bank closed me?', 'ok bye']]",
+            "output": "[['AI: The blood bank is closed.', 'Ok, Good Bye!']]"
         }
     ]
 }

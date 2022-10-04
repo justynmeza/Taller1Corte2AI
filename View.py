@@ -20,21 +20,23 @@ class View:
 
         self.login = tk.Tk()
         self.login.title("LOGIN")
+        self.login.geometry("360x392")
+        self.centrar(self.login, 360, 360)
         self.iconImage = tk.PhotoImage(file="./Img/favicon_Corarojofull-copy.png")
         self.login.iconphoto(False, self.iconImage)
 
         self.lblLogin = tk.Label(self.login, text="LOGIN")
-        self.lblLogin.grid(row=0, column=0)
+        self.lblLogin.place(x=150, y=60)
 
         self.userName = tk.StringVar()
         self.userName.set("")
 
         self.lblUser = tk.Label(self.login, text="Input your UserName")
-        self.lblUser.grid(row=1, column=0)
+        self.lblUser.place(x=110, y=100)
         self.txtUser = tk.Entry(self.login, textvariable=self.userName)
-        self.txtUser.grid(row= 2, column=0)
+        self.txtUser.place(x=110, y=140)
         self.btnUser = tk.Button(self.login, text="LOGIN", command=self.PrincipalWindowView)
-        self.btnUser.grid(row= 3, column=0)
+        self.btnUser.place(x=150, y=180)
 
         self.login.mainloop()
     
@@ -155,6 +157,8 @@ class View:
         self.lblNameW3.place(x=350, y=100)
 
         self.conversation = "Me: Hello, who are you?\nAI: What do you want to know about donating blood?"
+        self.me = []
+        self.Ai = []
 
         self.msgFrame = tk.Frame(self.windows_three, height=35, width=50)
         self.msgFrame.place(x=350, y=200)
@@ -179,22 +183,27 @@ class View:
 
     def Send(self):
         self.message = self.msgChat.get()
-        if (("bye" in self.message) or ("thanks" in self.message)):
-            self.input.append(self.message)
+        if (("bye" in self.message.lower()) or ("thanks" in self.message.lower())):
             self.msgChat.set("")
             self.msgList.insert(tk.END, "Me: " + self.message)
-            self.msgList.insert(tk.END, "AI: Good Bye!")
-            self.fillJson()
+            self.msgList.insert(tk.END, "AI: Ok, Good Bye!")
+            self.me.append(self.message)
+            self.Ai.append("Ok, Good Bye!")
+            self.input.append(self.me)
+            self.output.append(self.Ai)
+            print(self.input)
+            print(self.output)
+            self.dataJson()
         else:
             self.service = "ChatBot-OpenAi"
-            self.input.append(self.message)
+            self.me.append(self.message)
             self.msgChat.set("")
             self.msgList.insert(tk.END, "Me: " + self.message)
             self.conversation += "\nMe: " + self.message
             self.OpenAi()
 
     def OpenAi(self):
-        openai.api_key = "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"
+        openai.api_key = "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"
         response = openai.Completion.create(
             model="text-davinci-002",
             prompt=self.conversation,
@@ -207,14 +216,14 @@ class View:
         )
         self.answer = response.choices[0].text.strip()
         self.conversation += "\n" + self.answer
-        self.output.append(self.answer)
+        self.Ai.append(self.answer)
         self.msgList.insert(tk.END, self.answer)
 
     #Desings
 
-    def centrar(self, r):
-        altura = 700
-        anchura = 1000
+    def centrar(self, r, al = 700, an = 1000):
+        altura = al
+        anchura = an
         altura_pantalla = r.winfo_screenheight()
         anchura_pantalla = r.winfo_screenwidth()
         x = (anchura_pantalla // 2) - (anchura//2)
@@ -270,17 +279,3 @@ class View:
         else:
             return 1
 
-    def findId(self):
-        if (self.verifyFile()):
-            with open ("credential.json") as file:
-                self.data = json.load(file)
-            for key in self.data:
-                value = self.data[key]
-                for i in range(len(value)):
-                    item = value[i]
-                    idtemp = item['id']
-            
-            idtemp =+ 1
-            self.id = idtemp
-        else:
-            print("Archivo JSON no encontrado")
