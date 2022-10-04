@@ -4,6 +4,7 @@ from distutils.cmd import Command
 from email import message
 import json
 from msilib.schema import ListBox
+from sqlite3 import Row
 import tkinter as tk
 from turtle import right
 from typing import Sized
@@ -67,13 +68,17 @@ class View:
 
         self.logoImage = tk.PhotoImage(file="./Img/logo_rojofull.png")
         self.logo = tk.Label(self.principalWindows, image=self.logoImage)
-        self.logo.grid(row=0, column=0)
+        self.logo.place(x=0, y=0)
 
         #Description
+        self.img1 = tk.PhotoImage(file="./Img/Description.png")
+        self.imgDescription = tk.Label(self.principalWindows, image=self.img1)
+        self.imgDescription.place(x=0, y=100)
+        """
         self.lblTitle1 = tk.Label(self.principalWindows, text="Banco Nacional de Sangre")
         self.lblTitle1.grid(row=2, column=1)
         self.lblDescription = tk.Label(self.principalWindows, text="Sómos un banco de sangre sin ánimo de lucro con tecnología de\npunta y personal altamente calificado, sensible y ético al servicio de\ntodos.")
-        self.lblDescription.grid(row=3, column=1)
+        self.lblDescription.grid(row=3, column=1)"""
 
     #Opinion
     def Opinion(self):
@@ -85,16 +90,16 @@ class View:
         
         self.logoImage1 = tk.PhotoImage(file="./Img/logo_rojofull.png")
         self.logo1 = tk.Label(self.windows_one, image=self.logoImage1)
-        self.logo1.grid(row=0, column=0)
+        self.logo1.place(x=350, y=0)
 
         self.lblQuestionW1 = tk.Label(self.windows_one, text= "Write your opinion about the donated blood")
-        self.lblQuestionW1.grid(row=1, column=0)
+        self.lblQuestionW1.place(x=350, y=100)
         self.UserAnswer = tk.StringVar()
         self.UserAnswer.set("")
-        self.txtAnswerW1 = tk.Entry(self.windows_one, textvariable=self.UserAnswer)
-        self.txtAnswerW1.grid(row=2, column=0)
+        self.txtAnswerW1 = tk.Entry(self.windows_one, textvariable=self.UserAnswer, width=30)
+        self.txtAnswerW1.place(x = 350, y = 150)
         self.btnSubmit = tk.Button(self.windows_one, text="SUBMIT", command=self.SendOpinion)
-        self.btnSubmit.grid(row=2, column=1)
+        self.btnSubmit.place(x = 550, y = 150)
 
     def SendOpinion(self):
         self.service = "Translation_and_sentimentAnalysis-NlpCloud"
@@ -105,7 +110,7 @@ class View:
         opinion = textOpinion.Opinion()
         self.output.append(opinion)
         self.lblOpinion = tk.Label(self.windows_one, text=opinion)
-        self.lblOpinion.grid(row=3,column=0)
+        self.lblOpinion.place(x=350, y=200)
         self.dataJson()
 
     #Preguntas y respuestas
@@ -123,14 +128,14 @@ class View:
 
         self.userQuestion = tk.StringVar()
         self.userQuestion.set("")
-        self.txtQuestionW2 = tk.Entry(self.windows_two, textvariable=self.userQuestion)
+        self.txtQuestionW2 = tk.Entry(self.windows_two, textvariable=self.userQuestion, width=50)
         self.txtQuestionW2.place(x=350, y=100)
         self.radio1 = tk.Radiobutton(self.windows_two, text="What is necessary to be able to donate blood?", variable=self.userQuestion, value="What is necessary to be able to donate blood?")
-        self.radio1.place(x = 330, y = 150)
+        self.radio1.place(x = 350, y = 150)
         self.radio2 = tk.Radiobutton(self.windows_two, text="What types of blood exist?", variable=self.userQuestion, value="What types of blood exist?")
-        self.radio2.place(x = 330, y = 200)
+        self.radio2.place(x = 350, y = 200)
         self.btnSubmit1 = tk.Button(self.windows_two, text="SUBMIT", command=self.SendQuestion)
-        self.btnSubmit1.place(x = 330, y = 250)
+        self.btnSubmit1.place(x = 460, y = 250)
 
     def SendQuestion(self):
         self.service = "TextGeneration_and_QuestionAnswer-NlpCloud"
@@ -141,7 +146,7 @@ class View:
         question = textQuestion.Questions()
         self.output.append(question)
         self.lblAnswer = tk.Label(self.windows_two, text=question)
-        self.lblAnswer.place(x = 330, y = 300)
+        self.lblAnswer.place(x = 200, y = 300)
         self.dataJson()
 
     #CHAT BOT WITH AI (OPENAI)
