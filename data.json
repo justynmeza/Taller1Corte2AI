@@ -1,0 +1,25 @@
+{
+    "Data": [
+        {
+            "id": 1,
+            "user": "Justyn",
+            "service": "Translation_and_sentimentAnalysis-NlpCloud",
+            "input": "['Me gusta donar sangre']",
+            "output": "['Your opinion is: I like to donate blood.\\nThis opinion is: POSITIVE']"
+        },
+        {
+            "id": 2,
+            "user": "Justyn",
+            "service": "Translation_and_sentimentAnalysis-NlpCloud",
+            "input": "['Donated blood is fun']",
+            "output": "['Your opinion is: Donated blood is fun\\nThis opinion is: POSITIVE']"
+        },
+        {
+            "id": 3,
+            "user": "Yuyo",
+            "service": "Translation_and_sentimentAnalysis-NlpCloud",
+            "input": "['Donar sangre es genial']",
+            "output": "['Your opinion is: Donating blood is great.\\nThis opinion is: POSITIVE']"
+        }
+    ]
+}

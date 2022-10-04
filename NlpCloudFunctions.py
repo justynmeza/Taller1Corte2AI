@@ -48,17 +48,19 @@ class NlpCloudFunctions:
         return fullAnswer
 
     def Opinion(self):
-        translate = str(self.Translation(userText=str(self.getUserText)))
+        translate = str(self.Translation(userText=self.userText))
         sentiment = str(self.SentimentAnalysis(userText=translate))
-        return sentiment
+        return f"Your opinion is: {translate}\nThis opinion is: {sentiment}"
 
     def Questions(self):
-        answer = str(self.TextGeneration(question=str(self.getQuestion)))
-        summary = str(self.QuestionAnswer(question=str(self.getQuestion), textContext=answer))
-        return "Answer:\n"+str(answer)+"\nSummary:\n"+str(summary)
+        answer = str(self.TextGeneration(question=self.question))
+        summary = str(self.QuestionAnswer(question=self.question, textContext=answer))
+        return "Answer:\n"+str(answer)+"\nIn summary:\n"+str(summary)
 
     
 
-app = NlpCloudFunctions()
-app.setQuestion(question="What i need for donated blood?")
-print(app.Questions())
+#app = NlpCloudFunctions()
+#app.setQuestion(question="What i need for donated blood?")
+#print(app.QuestionAnswer(question=app.getQuestion(), ))
+#print(app.QuestionAnswer(question=app.getQuestion(), textContext=app.TextGeneration(question=app.getQuestion())))
+#print(app.Questions())

@@ -1,13 +1,50 @@
 from cgitb import text
+from distutils.cmd import Command
 from email import message
 import json
+from msilib.schema import ListBox
 import tkinter as tk
+from turtle import right
 import openai
 import NlpCloudFunctions as nlp
 
 class View:
 
     def __init__(self):
+        self.user = ""
+        self.data = {}
+        self.data ['Data'] = []
+        self.service = ""
+        self.input = []
+        self.output = []
+
+        self.login = tk.Tk()
+        self.login.title("LOGIN")
+        self.iconImage = tk.PhotoImage(file="./Img/favicon_Corarojofull-copy.png")
+        self.login.iconphoto(False, self.iconImage)
+
+        self.lblLogin = tk.Label(self.login, text="LOGIN")
+        self.lblLogin.grid(row=0, column=0)
+
+        self.userName = tk.StringVar()
+        self.userName.set("")
+
+        self.lblUser = tk.Label(self.login, text="Input your UserName")
+        self.lblUser.grid(row=1, column=0)
+        self.txtUser = tk.Entry(self.login, textvariable=self.userName)
+        self.txtUser.grid(row= 2, column=0)
+        self.btnUser = tk.Button(self.login, text="LOGIN", command=self.PrincipalWindowView)
+        self.btnUser.grid(row= 3, column=0)
+
+        self.login.mainloop()
+    
+
+    #Pricipal window
+
+    def PrincipalWindowView(self):
+        self.user = self.userName
+        self.login.destroy()
+
         self.principalWindows = tk.Tk()
         self.principalWindows.geometry("500x500")
         self.principalWindows.attributes('-fullscreen', True)
@@ -34,15 +71,13 @@ class View:
         self.lblDescription = tk.Label(self.principalWindows, text="Sómos un banco de sangre sin ánimo de lucro con tecnología de\npunta y personal altamente calificado, sensible y ético al servicio de\ntodos.")
         self.lblDescription.grid(row=3, column=1)
 
-        self.principalWindows.mainloop()
-    
-    #Area psicologica
+    #Opinion
     def Opinion(self):
         self.windows_one = tk.Toplevel()
-        self.windows_one.geometry("400x200")
-        self.windows_one.title("Area Psicologica")
+        self.windows_one.geometry("1000x700")
         self.iconImage = tk.PhotoImage(file="./Img/favicon_Corarojofull-copy.png")
         self.windows_one.iconphoto(False, self.iconImage)
+        self.centrar(self.windows_one)
         
         self.logoImage1 = tk.PhotoImage(file="./Img/logo_rojofull.png")
         self.logo1 = tk.Label(self.windows_one, image=self.logoImage1)
@@ -58,19 +93,25 @@ class View:
         self.btnSubmit.grid(row=2, column=1)
 
     def SendOpinion(self):
+        self.service = "Translation_and_sentimentAnalysis-NlpCloud"
+        self.input.append(self.UserAnswer.get())
         textOpinion = nlp.NlpCloudFunctions()
         textOpinion.setUserText(userText=str(self.UserAnswer.get()))
         self.UserAnswer.set("")
-        self.lblOpinion = tk.Label(self.windows_one, text="Your opinion is: "+ textOpinion.Opinion())
+        opinion = textOpinion.Opinion()
+        self.output.append(opinion)
+        self.lblOpinion = tk.Label(self.windows_one, text=opinion)
         self.lblOpinion.grid(row=3,column=0)
+        self.dataJson()
 
     #Preguntas y respuestas
     def Questions(self):
         self.windows_two = tk.Toplevel()
-        self.windows_two.geometry("400x200")
+        self.windows_two.geometry("1000x700")
         self.windows_two.title("Question and Answers")
         self.iconImage = tk.PhotoImage(file="./Img/favicon_Corarojofull-copy.png")
         self.windows_two.iconphoto(False, self.iconImage)
+        self.centrar(self.windows_two)
 
         self.logoImage1 = tk.PhotoImage(file="./Img/logo_rojofull.png")
         self.logo1 = tk.Label(self.windows_two, image=self.logoImage1)
@@ -80,60 +121,80 @@ class View:
         self.userQuestion.set("")
         self.txtQuestionW2 = tk.Entry(self.windows_two, textvariable=self.userQuestion)
         self.txtQuestionW2.grid(row=1, column=0)
-        self.btnSubmit1 = tk.Button(self.windows_two, text="SUBNIT", command=self.SendQuestion)
-        self.btnSubmit1.grid(row=2, column=1)
+        self.btnSubmit1 = tk.Button(self.windows_two, text="SUBMIT", command=self.SendQuestion)
+        self.btnSubmit1.grid(row=1, column=1)
 
     def SendQuestion(self):
+        self.service = "TextGeneration_and_QuestionAnswer-NlpCloud"
+        self.input.append(self.userQuestion.get())
         textQuestion = nlp.NlpCloudFunctions()
-        textQuestion.setQuestion(userText=str(self.UserAnswer.get()))
+        textQuestion.setQuestion(question=str(self.userQuestion.get()))
         self.userQuestion.set("")
-        self.lblAnswer = tk.Label(self.windows_two, text= textQuestion.Questions())
-        self.lblAnswer.grid(row=3,column=0)
+        question = textQuestion.Questions()
+        self.output.append(question)
+        self.lblAnswer = tk.Label(self.windows_two, text=question)
+        self.lblAnswer.grid(row=2,column=0)
+        self.dataJson()
 
     #CHAT BOT WITH AI (OPENAI)
 
     def ChatBotWindows(self):
         self.windows_three = tk.Toplevel()
+        self.windows_three.geometry("1000x700")
+        self.windows_three.resizable(0,0)
         self.windows_three.title("Chat Bot")
         self.iconImage = tk.PhotoImage(file="./Img/favicon_Corarojofull-copy.png")
         self.windows_three.iconphoto(False, self.iconImage)
+        self.centrar(self.windows_three)
         
         self.logoImage1 = tk.PhotoImage(file="./Img/logo_rojofull.png")
         self.logo1 = tk.Label(self.windows_three, image=self.logoImage1)
-        self.logo1.grid(row=0, column=0)
+        self.logo1.place(x=350, y=0)
         
         self.lblNameW3 = tk.Label(self.windows_three, text = "Chat Bot")
-        self.lblNameW3.grid(row = 0, column=1)
-
-        self.msgFrame = tk.Frame(self.windows_three)
-        self.msgFrame.grid(row=1,column=0)
-        self.msgChat = tk.StringVar()
-        self.msgChat.set("")
-        self.scrollBar = tk.Scrollbar(self.msgFrame)
-
-        self.msgList = tk.Listbox(self.msgFrame, height=25, width=50, yscrollcommand=self.scrollBar.set)
-        self.msgList.grid(row=1,column=0)
-        self.msgList.insert(tk.END, "Me: Hello, who are you?")
-        self.msgList.insert(tk.END, "AI: I am an AI, What do you want to know about donating blood?")
+        self.lblNameW3.place(x=350, y=100)
 
         self.conversation = "Me: Hello, who are you?\nAI: What do you want to know about donating blood?"
 
-        self.txtField = tk.Entry(self.windows_three, textvariable=self.msgChat)
-        self.txtField.bind("<Return>", "")
-        self.txtField.grid(row=2,column=0)
-        self.sendButton = tk.Button(self.windows_three, text="SUBMIT", command=self.Send)
-        self.sendButton.grid(row=2,column=1)
+        self.msgFrame = tk.Frame(self.windows_three, height=35, width=50)
+        self.msgFrame.place(x=350, y=200)
+        self.msgChat = tk.StringVar()
+        self.msgChat.set("")
 
+        self.msgList = tk.Listbox(self.msgFrame, height=20, width=50)
+        self.msgList.grid(row=0, column=0)
+        self.msgList.insert(tk.END, "Me: Hello, who are you?")
+        self.msgList.insert(tk.END, "AI: I am an AI, What do you want to know about donating blood?")
+        self.msgList.insert(tk.END, "AI: If you want finish the conversation, write bye :)")
+        self.scrollBar = tk.Scrollbar(self.msgFrame)
+        self.scrollBar.place(in_=self.msgList, relx=1, relheight=1, bordermode="outside")
+
+        self.frameField = tk.Frame(self.windows_three)
+        self.frameField.place(x=350, y=600)
+        self.txtField = tk.Entry(self.frameField, textvariable=self.msgChat, width=40)
+        self.txtField.bind("<Return>", "")
+        self.txtField.grid(row=0,column=0)
+        self.sendButton = tk.Button(self.frameField, text="SUBMIT", command=self.Send)
+        self.sendButton.grid(row=0,column=1)
 
     def Send(self):
         self.message = self.msgChat.get()
-        self.msgChat.set("")
-        self.msgList.insert(tk.END, "Me: " + self.message)
-        self.conversation += "\nMe: " + self.message
-        self.OpenAi()
+        if (("bye" in self.message) or ("thanks" in self.message)):
+            self.input.append(self.message)
+            self.msgChat.set("")
+            self.msgList.insert(tk.END, "Me: " + self.message)
+            self.msgList.insert(tk.END, "AI: Good Bye!")
+            self.fillJson()
+        else:
+            self.service = "ChatBot-OpenAi"
+            self.input.append(self.message)
+            self.msgChat.set("")
+            self.msgList.insert(tk.END, "Me: " + self.message)
+            self.conversation += "\nMe: " + self.message
+            self.OpenAi()
 
     def OpenAi(self):
-        openai.api_key = "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"
+        openai.api_key = "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"
         response = openai.Completion.create(
             model="text-davinci-002",
             prompt=self.conversation,
@@ -146,5 +207,80 @@ class View:
         )
         self.answer = response.choices[0].text.strip()
         self.conversation += "\n" + self.answer
+        self.output.append(self.answer)
         self.msgList.insert(tk.END, self.answer)
 
+    #Desings
+
+    def centrar(self, r):
+        altura = 700
+        anchura = 1000
+        altura_pantalla = r.winfo_screenheight()
+        anchura_pantalla = r.winfo_screenwidth()
+        x = (anchura_pantalla // 2) - (anchura//2)
+        y = (altura_pantalla//2) - (altura//2)
+        r.geometry(f"+{x}+{y}")
+
+
+    #JSON
+
+    def verifyFile(self): #Comprueba si existe el historial
+        try:
+            with open ("data.json") as File:
+                return True     
+        except FileNotFoundError as e:
+            return False
+
+    def fillJson(self):
+        idFile = self.autoIncrementId()
+        dictionary = {
+            'id': idFile,
+            'user': str(self.user.get()),
+            'service': str(self.service),
+            'input': str(self.input),
+            'output': str(self.output)
+        }
+        self.service = ""
+        self.input = []
+        self.output = []
+        return dictionary
+
+    def dataJson(self):
+        fileJson = self.fillJson()
+        
+        if self.verifyFile() == True:
+            with open ("data.json") as File:
+                self.data = json.load(File)
+            self.data['Data'].append(fileJson)
+
+            with open("data.json", 'w') as newFile:
+                json.dump(self.data, newFile)
+        else:
+            with open("data.json", 'w') as newFile:
+                self.data['Data'].append(fileJson)
+                json.dump(self.data, newFile)
+
+    def autoIncrementId(self):
+        if (self.verifyFile()):
+            with open ("data.json") as File:
+                    datos = json.load(File)
+                    for key in datos:
+                        value = datos[key]
+                        return (len(value)+1)
+        else:
+            return 1
+
+    def findId(self):
+        if (self.verifyFile()):
+            with open ("credential.json") as file:
+                self.data = json.load(file)
+            for key in self.data:
+                value = self.data[key]
+                for i in range(len(value)):
+                    item = value[i]
+                    idtemp = item['id']
+            
+            idtemp =+ 1
+            self.id = idtemp
+        else:
+            print("Archivo JSON no encontrado")
