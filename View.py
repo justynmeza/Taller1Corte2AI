@@ -1,10 +1,12 @@
 from cgitb import text
+from ctypes.wintypes import SIZE
 from distutils.cmd import Command
 from email import message
 import json
 from msilib.schema import ListBox
 import tkinter as tk
 from turtle import right
+from typing import Sized
 import openai
 import NlpCloudFunctions as nlp
 
@@ -117,14 +119,18 @@ class View:
 
         self.logoImage1 = tk.PhotoImage(file="./Img/logo_rojofull.png")
         self.logo1 = tk.Label(self.windows_two, image=self.logoImage1)
-        self.logo1.grid(row=0, column=0)
+        self.logo1.place(x=350, y=0)
 
         self.userQuestion = tk.StringVar()
         self.userQuestion.set("")
         self.txtQuestionW2 = tk.Entry(self.windows_two, textvariable=self.userQuestion)
-        self.txtQuestionW2.grid(row=1, column=0)
+        self.txtQuestionW2.place(x=350, y=100)
+        self.radio1 = tk.Radiobutton(self.windows_two, text="What is necessary to be able to donate blood?", variable=self.userQuestion, value="What is necessary to be able to donate blood?")
+        self.radio1.place(x = 330, y = 150)
+        self.radio2 = tk.Radiobutton(self.windows_two, text="What types of blood exist?", variable=self.userQuestion, value="What types of blood exist?")
+        self.radio2.place(x = 330, y = 200)
         self.btnSubmit1 = tk.Button(self.windows_two, text="SUBMIT", command=self.SendQuestion)
-        self.btnSubmit1.grid(row=1, column=1)
+        self.btnSubmit1.place(x = 330, y = 250)
 
     def SendQuestion(self):
         self.service = "TextGeneration_and_QuestionAnswer-NlpCloud"
@@ -135,7 +141,7 @@ class View:
         question = textQuestion.Questions()
         self.output.append(question)
         self.lblAnswer = tk.Label(self.windows_two, text=question)
-        self.lblAnswer.grid(row=2,column=0)
+        self.lblAnswer.place(x = 330, y = 300)
         self.dataJson()
 
     #CHAT BOT WITH AI (OPENAI)
@@ -154,18 +160,18 @@ class View:
         self.logo1.place(x=350, y=0)
         
         self.lblNameW3 = tk.Label(self.windows_three, text = "Chat Bot")
-        self.lblNameW3.place(x=350, y=100)
+        self.lblNameW3.place(x=450, y=100)
 
         self.conversation = "Me: Hello, who are you?\nAI: What do you want to know about donating blood?"
         self.me = []
         self.Ai = []
 
-        self.msgFrame = tk.Frame(self.windows_three, height=35, width=50)
-        self.msgFrame.place(x=350, y=200)
+        self.msgFrame = tk.Frame(self.windows_three, height=35, width=100)
+        self.msgFrame.place(x=230, y=200)
         self.msgChat = tk.StringVar()
         self.msgChat.set("")
 
-        self.msgList = tk.Listbox(self.msgFrame, height=20, width=50)
+        self.msgList = tk.Listbox(self.msgFrame, height=20, width=100)
         self.msgList.grid(row=0, column=0)
         self.msgList.insert(tk.END, "Me: Hello, who are you?")
         self.msgList.insert(tk.END, "AI: I am an AI, What do you want to know about donating blood?")
@@ -174,8 +180,8 @@ class View:
         self.scrollBar.place(in_=self.msgList, relx=1, relheight=1, bordermode="outside")
 
         self.frameField = tk.Frame(self.windows_three)
-        self.frameField.place(x=350, y=600)
-        self.txtField = tk.Entry(self.frameField, textvariable=self.msgChat, width=40)
+        self.frameField.place(x=300, y=550)
+        self.txtField = tk.Entry(self.frameField, textvariable=self.msgChat, width=70)
         self.txtField.bind("<Return>", "")
         self.txtField.grid(row=0,column=0)
         self.sendButton = tk.Button(self.frameField, text="SUBMIT", command=self.Send)
